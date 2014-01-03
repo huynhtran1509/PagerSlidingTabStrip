@@ -39,9 +39,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 import com.astuetz.pagerslidingtabstrip.R;
+
+import java.util.Locale;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
@@ -86,6 +86,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private int dividerPadding = 12;
 	private int tabPadding = 24;
 	private int dividerWidth = 1;
+    private int minTabWidth = -1;
 
 	private int tabTextSize = 12;
 	private int tabTextColor = 0xFF666666;
@@ -151,6 +152,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		shouldExpand = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsShouldExpand, shouldExpand);
 		scrollOffset = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsScrollOffset, scrollOffset);
 		textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTextAllCaps, textAllCaps);
+        minTabWidth = (int) a.getDimension(R.styleable.PagerSlidingTabStrip_pstsTabMinWidth, minTabWidth);
 
 		a.recycle();
 
@@ -253,6 +255,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		});
 
 		tab.setPadding(tabPadding, 0, tabPadding, 0);
+        if (minTabWidth >= 0) tab.setMinimumWidth(minTabWidth);
 		tabsContainer.addView(tab, position, shouldExpand ? expandedTabLayoutParams : defaultTabLayoutParams);
 	}
 
