@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.astuetz</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.1.a</version>
     </parent>
 
     <artifactId>sample</artifactId>

@@ -6,11 +6,11 @@
     <parent>
         <groupId>com.astuetz</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.1.a</version>
     </parent>
 
     <artifactId>pagerslidingtabstrip</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1.a</version>
     <packaging>apklib</packaging>
 
     <build>
