@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.astuetz</groupId>
+        <groupId>com.willowtreeapps.com.astuetz</groupId>
         <artifactId>parent</artifactId>
-        <version>1.0.1.a</version>
+        <version>1.0.1.b</version>
     </parent>
 
     <artifactId>sample</artifactId>
