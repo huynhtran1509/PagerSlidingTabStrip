@@ -358,10 +358,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-			currentPosition = position;
-			currentPositionOffset = positionOffset;
+            if (positionOffset == 1) {
+                // Moved all the way over to next page, just set it as such
+                currentPosition = position + 1;
+                currentPositionOffset = 0;
+            } else {
+                currentPosition = position;
+                currentPositionOffset = positionOffset;
+            }
 
-			scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+			scrollToChild(currentPosition, (int) (currentPositionOffset * tabsContainer.getChildAt(position).getWidth()));
 
 			invalidate();
 
