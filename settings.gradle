@@ -1,2 +1,5 @@
 include 'library'
 include 'sample'
+ 
+project(':library').name = 'pagerslidingtabstrip'
+
