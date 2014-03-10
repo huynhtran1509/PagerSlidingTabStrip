@@ -23,3 +23,16 @@ android {
     }
 }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: project.getProperty('wta.internal')) {
+                authentication(
+                    userName: project.getProperty('wta.username'),
+                    password: project.getProperty('wta.password')
+                )
+            }
+        }
+    }
+}
+
