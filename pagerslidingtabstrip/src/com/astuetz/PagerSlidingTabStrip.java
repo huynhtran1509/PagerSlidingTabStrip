@@ -26,6 +26,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.ColorRes;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
@@ -387,7 +388,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         invalidate();
     }
 
-    public void setIndicatorColorResource(int resId) {
+    public void setIndicatorColorResource(@ColorRes int resId) {
         this.indicatorColor = getResources().getColor(resId);
         invalidate();
     }
@@ -410,7 +411,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         invalidate();
     }
 
-    public void setUnderlineColorResource(int resId) {
+    public void setUnderlineColorResource(@ColorRes int resId) {
         this.underlineColor = getResources().getColor(resId);
         invalidate();
     }
@@ -424,7 +425,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         invalidate();
     }
 
-    public void setDividerColorResource(int resId) {
+    public void setDividerColorResource(@ColorRes int resId) {
         this.dividerColor = getResources().getColor(resId);
         invalidate();
     }
@@ -491,7 +492,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         updateTabStyles();
     }
 
-    public void setTextColorResource(int resId) {
+    public void setTextColorResource(@ColorRes int resId) {
         this.tabTextColor = getResources().getColor(resId);
         updateTabStyles();
     }
