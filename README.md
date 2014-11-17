@@ -57,7 +57,10 @@ your brand:
  * `pstsScrollOffset` Scroll offset of the selected tab
  * `pstsTabBackground` Background drawable of each tab, should be a StateListDrawable
  * `pstsShouldExpand` If set to true, each tab is given the same weight, default false
- * `pstsTextAllCaps` If true, all tab titles will be upper case, default true
+ * `android:textAllCaps` If true, all tab titles will be upper case, default true
+ * `android:textSize` The size of the text in the tab
+ * `android:textColor` The color of the text in the tab
+ * `android:textStyle` The style of the text in the tab, default BOLD
 
 *All attributes have their respective getters and setters to change them at runtime*
 
