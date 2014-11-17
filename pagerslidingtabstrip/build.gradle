@@ -1,8 +1,8 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 apply plugin: 'android-maven'
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
 }
 
 android {
@@ -26,10 +26,10 @@ android {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: project.getProperty('wta.internal')) {
+            repository(url: project.getProperty('localMavenUrl')) {
                 authentication(
-                    userName: project.getProperty('wta.username'),
-                    password: project.getProperty('wta.password')
+                        userName: project.getProperty('localMavenUser'),
+                        password: project.getProperty('localMavenPassword')
                 )
             }
         }
