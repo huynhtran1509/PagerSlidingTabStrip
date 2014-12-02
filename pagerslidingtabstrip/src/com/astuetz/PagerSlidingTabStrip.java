@@ -36,6 +36,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -204,19 +205,18 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             @SuppressLint("NewApi")
             @Override
             public void onGlobalLayout() {
-
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 } else {
                     getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
 
-                adjustForExpandSize();
                 setCurrentPosition(currentPosition);
                 scrollToChild(currentPosition, 0);
             }
         });
 
+        adjustForExpandSize();
     }
 
     private void addTextTab(final int position, CharSequence title) {
@@ -288,33 +288,48 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         // We need to check if the child views are too wide and nix the padding or fall back to
         // not expanded, otherwise the text will be cut off.
         if (shouldExpand) {
-            int totalWidth = 0;
-            for (int i = 0; i < tabCount; i++) {
-                View v = tabsContainer.getChildAt(i);
-                v.setLayoutParams(defaultTabLayoutParams);
-                v.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-                totalWidth += v.getMeasuredWidth();
-            }
+            if (tabsContainer.getWidth() > 0) {
+                doAdjustForExpandSize();
+                requestLayout();
+            } else {
 
-            boolean tooWideForPadding = totalWidth + tabPadding * 2 * tabCount >= tabsContainer.getWidth();
-            boolean tooWideForExpanding = totalWidth >= tabsContainer.getWidth();
-            for (int i = 0; i < tabCount; i++) {
-                View v = tabsContainer.getChildAt(i);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) v.getLayoutParams();
-                if (tooWideForExpanding) {
-                    v.setLayoutParams(defaultTabLayoutParams);
-                    v.setPadding(tabPadding, 0, tabPadding, 0);
-                } else {
-                    v.setLayoutParams(expandedTabLayoutParams);
-                    if (tooWideForPadding) {
-                        v.setPadding(0, 0, 0, 0);
-                    } else {
-                        v.setPadding(tabPadding, 0, tabPadding, 0);
+                getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        getViewTreeObserver().removeOnPreDrawListener(this);
+                        doAdjustForExpandSize();
+                        forceLayout();
+                        return false;
                     }
+                });
+            }
+        }
+    }
+
+    private void doAdjustForExpandSize() {
+        int totalWidth = 0;
+        for (int i = 0; i < tabCount; i++) {
+            View v = tabsContainer.getChildAt(i);
+            v.setLayoutParams(defaultTabLayoutParams);
+            v.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+            totalWidth += v.getMeasuredWidth();
+        }
+
+        boolean tooWideForPadding = totalWidth + tabPadding * 2 * tabCount >= tabsContainer.getWidth();
+        boolean tooWideForExpanding = totalWidth >= tabsContainer.getWidth();
+        for (int i = 0; i < tabCount; i++) {
+            View v = tabsContainer.getChildAt(i);
+            if (tooWideForExpanding) {
+                v.setLayoutParams(defaultTabLayoutParams);
+                v.setPadding(tabPadding, 0, tabPadding, 0);
+            } else {
+                v.setLayoutParams(expandedTabLayoutParams);
+                if (tooWideForPadding) {
+                    v.setPadding(0, 0, 0, 0);
+                } else {
+                    v.setPadding(tabPadding, 0, tabPadding, 0);
                 }
             }
-
-            requestLayout();
         }
     }
 
