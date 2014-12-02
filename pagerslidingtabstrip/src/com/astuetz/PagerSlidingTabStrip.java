@@ -35,6 +35,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -210,6 +211,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                     getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
 
+                adjustForExpandSize();
                 setCurrentPosition(currentPosition);
                 scrollToChild(currentPosition, 0);
             }
@@ -246,8 +248,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         });
 
         tab.setPadding(tabPadding, 0, tabPadding, 0);
-        if (minTabWidth >= 0) tab.setMinimumWidth(minTabWidth);
-        tabsContainer.addView(tab, position, shouldExpand ? expandedTabLayoutParams : defaultTabLayoutParams);
+        if (minTabWidth >= 0) {
+            tab.setMinimumWidth(minTabWidth);
+        }
+
+        tabsContainer.addView(tab, position, defaultTabLayoutParams);
     }
 
     private void updateTabStyles() {
@@ -277,6 +282,40 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             }
         }
 
+    }
+
+    private void adjustForExpandSize() {
+        // We need to check if the child views are too wide and nix the padding or fall back to
+        // not expanded, otherwise the text will be cut off.
+        if (shouldExpand) {
+            int totalWidth = 0;
+            for (int i = 0; i < tabCount; i++) {
+                View v = tabsContainer.getChildAt(i);
+                v.setLayoutParams(defaultTabLayoutParams);
+                v.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+                totalWidth += v.getMeasuredWidth();
+            }
+
+            boolean tooWideForPadding = totalWidth + tabPadding * 2 * tabCount >= tabsContainer.getWidth();
+            boolean tooWideForExpanding = totalWidth >= tabsContainer.getWidth();
+            for (int i = 0; i < tabCount; i++) {
+                View v = tabsContainer.getChildAt(i);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) v.getLayoutParams();
+                if (tooWideForExpanding) {
+                    v.setLayoutParams(defaultTabLayoutParams);
+                    v.setPadding(tabPadding, 0, tabPadding, 0);
+                } else {
+                    v.setLayoutParams(expandedTabLayoutParams);
+                    if (tooWideForPadding) {
+                        v.setPadding(0, 0, 0, 0);
+                    } else {
+                        v.setPadding(tabPadding, 0, tabPadding, 0);
+                    }
+                }
+            }
+
+            requestLayout();
+        }
     }
 
     private void scrollToChild(int position, int offset) {
