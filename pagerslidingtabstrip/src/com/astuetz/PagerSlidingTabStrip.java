@@ -311,6 +311,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         for (int i = 0; i < tabCount; i++) {
             View v = tabsContainer.getChildAt(i);
             v.setLayoutParams(defaultTabLayoutParams);
+            v.setPadding(tabPadding, 0, tabPadding, 0);
             v.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
             totalWidth += v.getMeasuredWidth();
         }
